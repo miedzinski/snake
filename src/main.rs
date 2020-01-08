@@ -18,20 +18,24 @@ use crate::mcts::MonteCarloStrategy;
 use crate::pathfinder::PathFindingStrategy;
 use crate::random::RandomStrategy;
 use crate::strategy::StrategyImpl;
-use clap::{app_from_crate, SubCommand};
+use clap::{app_from_crate, Arg};
 use piston_window::{
     clear, Button, EventLoop, PistonWindow, PressEvent, UpdateEvent, WindowSettings,
 };
 
 fn main() {
     let matches = app_from_crate!()
-        .subcommand(SubCommand::with_name("random").about("Random moves"))
-        .subcommand(SubCommand::with_name("pathfinder").about("Shortest path to food"))
-        .subcommand(SubCommand::with_name("monte-carlo").about("Monte Carlo Tree Search"))
+        .arg(
+            Arg::with_name("strategy")
+                .long("strategy")
+                .short("s")
+                .takes_value(true)
+                .possible_values(&["random", "pathfinder", "monte-carlo"]),
+        )
         .get_matches();
 
-    let playing = matches.subcommand_name().is_none();
-    let strategy: StrategyImpl = match matches.subcommand_name().unwrap_or("") {
+    let playing = matches.value_of("strategy").is_none();
+    let strategy: StrategyImpl = match matches.value_of("strategy").unwrap_or("") {
         "random" => StrategyImpl::Random(RandomStrategy),
         "pathfinder" => StrategyImpl::PathFinder(PathFindingStrategy),
         "monte-carlo" => StrategyImpl::MonteCarlo(MonteCarloStrategy),
