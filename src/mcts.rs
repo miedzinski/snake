@@ -6,7 +6,7 @@ use fnv::FnvHashMap;
 use rand::{thread_rng, Rng};
 use rayon::prelude::*;
 
-const DEFAULT_RUNS: usize = 50_000;
+const DEFAULT_RUNS: usize = 10_000;
 
 #[derive(Debug)]
 struct Run {
